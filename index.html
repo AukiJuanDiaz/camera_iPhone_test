@@ -37,13 +37,6 @@
 		// get video element
 		var video = document.getElementById("videoElement");
 
-		// add event listener to video element to ensure it is properly initialized
-		video.addEventListener("loadedmetadata", function() {
-			// set video width and height to prevent distortion
-			video.width = video.videoWidth;
-			video.height = video.videoHeight;
-		});
-
 		// get start button element
 		var startButton = document.getElementById("startButton");
 
@@ -56,10 +49,17 @@
 		// getUserMedia constraints for front camera
 		var frontConstraints = { audio: false, video: { facingMode: "user" } };
 
-		// add event listener to main camera button
-		startButton.addEventListener("click", function() {
-			// get user media with main camera
-			navigator.mediaDevices.getUserMedia(mainConstraints)
+		// function to start camera
+		function startCamera(constraints) {
+			// stop any existing video stream
+			if (video.srcObject) {
+				video.srcObject.getTracks().forEach(function(track) {
+					track.stop();
+				});
+			}
+
+			// get user media with specified constraints
+			navigator.mediaDevices.getUserMedia(constraints)
 				.then(function(mediaStream) {
 					// attach video stream to video element
 					video.srcObject = mediaStream;
@@ -68,24 +68,18 @@
 					video.play();
 				})
 				.catch(function(error) {
-					console.error("Error accessing main camera.", error);
+					console.error("Error accessing camera.", error);
 				});
+		}
+
+		// add event listener to main camera button
+		startButton.addEventListener("click", function() {
+			startCamera(mainConstraints);
 		});
 
 		// add event listener to front camera button
 		startFrontButton.addEventListener("click", function() {
-			// get user media with front camera
-			navigator.mediaDevices.getUserMedia(frontConstraints)
-				.then(function(mediaStream) {
-					// attach video stream to video element
-					video.srcObject = mediaStream;
-
-					// play video
-					video.play();
-				})
-				.catch(function(error) {
-					console.error("Error accessing front camera.", error);
-				});
+			startCamera(frontConstraints);
 		});
 	</script>
 </body>
