@@ -10,7 +10,9 @@
 		}
 		video {
 			width: 100%;
-			height: auto;
+			height: 56.25vh;
+			object-fit: cover;
+			background-color: black;
 		}
 		button {
 			display: block;
@@ -29,6 +31,7 @@
 	<video id="videoElement"></video>
 	<button id="startButton">Start Camera</button>
 
+	<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 	<script>
 		// get video element
 		var video = document.getElementById("videoElement");
@@ -37,7 +40,7 @@
 		var startButton = document.getElementById("startButton");
 
 		// getUserMedia constraints
-		var constraints = { audio: false, video: true };
+		var constraints = { audio: false, video: { facingMode: "environment" } };
 
 		// get user media
 		navigator.mediaDevices.getUserMedia(constraints)
