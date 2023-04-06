@@ -29,7 +29,8 @@
 </head>
 <body>
 	<video id="videoElement"></video>
-	<button id="startButton">Start Camera</button>
+	<button id="startButton">Start Main Camera</button>
+	<button id="startFrontButton">Start Front Camera</button>
 
 	<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 	<script>
@@ -39,26 +40,19 @@
 		// get start button element
 		var startButton = document.getElementById("startButton");
 
-		// getUserMedia constraints
-		var constraints = { audio: false, video: { facingMode: "environment" } };
+		// get front camera button element
+		var startFrontButton = document.getElementById("startFrontButton");
 
-		// get user media
-		navigator.mediaDevices.getUserMedia(constraints)
-			.then(function(mediaStream) {
-				// attach video stream to video element
-				video.srcObject = mediaStream;
+		// getUserMedia constraints for main camera
+		var mainConstraints = { audio: false, video: { facingMode: "environment" } };
 
-				// play video
-				video.play();
-			})
-			.catch(function(error) {
-				console.error("Error accessing media devices.", error);
-			});
+		// getUserMedia constraints for front camera
+		var frontConstraints = { audio: false, video: { facingMode: "user" } };
 
-		// add event listener to start button
+		// add event listener to main camera button
 		startButton.addEventListener("click", function() {
-			// get user media
-			navigator.mediaDevices.getUserMedia(constraints)
+			// get user media with main camera
+			navigator.mediaDevices.getUserMedia(mainConstraints)
 				.then(function(mediaStream) {
 					// attach video stream to video element
 					video.srcObject = mediaStream;
@@ -67,7 +61,23 @@
 					video.play();
 				})
 				.catch(function(error) {
-					console.error("Error accessing media devices.", error);
+					console.error("Error accessing main camera.", error);
+				});
+		});
+
+		// add event listener to front camera button
+		startFrontButton.addEventListener("click", function() {
+			// get user media with front camera
+			navigator.mediaDevices.getUserMedia(frontConstraints)
+				.then(function(mediaStream) {
+					// attach video stream to video element
+					video.srcObject = mediaStream;
+
+					// play video
+					video.play();
+				})
+				.catch(function(error) {
+					console.error("Error accessing front camera.", error);
 				});
 		});
 	</script>
