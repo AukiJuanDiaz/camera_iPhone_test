@@ -1,58 +1,54 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="UTF-8">
-	<title>Camera with Sudoku overlay</title>
-	<style>
-		#cameraFeed {
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
-			opacity: 0.5;
-		}
-		#sudokuOverlay {
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			display: grid;
-			grid-template-columns: repeat(9, 1fr);
-			grid-template-rows: repeat(9, 1fr);
-			grid-gap: 2px;
-			pointer-events: none;
-		}
-		.sudoku-cell {
-			background-color: rgba(255, 255, 255, 0.8);
-		}
-	</style>
-</head>
-<body>
-<video id="player" controls autoplay></video>
-<button id="capture">Capture</button>
-<canvas id="canvas" width="320" height="240"></canvas>
+<style>
+  #canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  #grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+  }
+</style>
+
+<video id="player" playsinline autoplay></video>
+<canvas id="canvas"></canvas>
+<div id="grid"></div>
+
 <script>
   const player = document.getElementById('player');
   const canvas = document.getElementById('canvas');
   const context = canvas.getContext('2d');
-  const captureButton = document.getElementById('capture');
-
+  const grid = document.getElementById('grid');
   const constraints = {
     video: true,
   };
 
-  captureButton.addEventListener('click', () => {
-    // Draw the video frame to the canvas.
-    context.drawImage(player, 0, 0, canvas.width, canvas.height);
-  });
+  // Define the grid overlay
+  const gridSize = 9;
+  const gridColor = 'rgba(255, 255, 255, 0.5)';
+  const gridLineWidth = 2;
+  const gridSquareSize = canvas.width / gridSize;
+  const gridOffset = (canvas.width - (gridSquareSize * gridSize)) / 2;
+  grid.style.width = canvas.width + 'px';
+  grid.style.height = canvas.height + 'px';
+  grid.style.backgroundSize = `${gridSquareSize}px ${gridSquareSize}px`;
+  grid.style.backgroundImage = `linear-gradient(${gridColor} ${gridLineWidth}px, transparent ${gridLineWidth}px), linear-gradient(90deg, ${gridColor} ${gridLineWidth}px, transparent ${gridLineWidth}px)`;
+  grid.style.backgroundPosition = `${gridOffset}px ${gridOffset}px`;
 
-  // Attach the video stream to the video element and autoplay.
   navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+    // Attach the video stream to the video element and autoplay.
     player.srcObject = stream;
+
+    // Draw the video stream onto the canvas.
+    const drawVideo = () => {
+      context.drawImage(player, 0, 0, canvas.width, canvas.height);
+      requestAnimationFrame(drawVideo);
+    };
+    drawVideo();
+  }).catch((error) => {
+    console.error('Error accessing media devices.', error);
   });
 </script>
-</body>
-</html>
