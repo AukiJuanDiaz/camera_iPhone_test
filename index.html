@@ -7,29 +7,39 @@
 		body {
 			margin: 0;
 			padding: 0;
-		}
-		video {
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			height: 100vh;
 			background-color: black;
+		}
+		img {
+			max-width: 100%;
+			max-height: 100%;
 		}
 	</style>
 </head>
 <body>
-	<video id="videoElement"></video>
+	<input type="file" capture="camera" accept="image/*" id="cameraInput" name="cameraInput">
+	<div id="imageContainer"></div>
 
 	<script>
-		var video = document.getElementById("videoElement");
+		var cameraInput = document.getElementById("cameraInput");
+		var imageContainer = document.getElementById("imageContainer");
 
-		navigator.mediaDevices.getUserMedia({ video: true })
-			.then(function(stream) {
-				video.srcObject = stream;
-				video.play();
-			})
-			.catch(function(error) {
-				console.error("Error accessing camera.", error);
-			});
+		cameraInput.addEventListener("change", function(event) {
+			var file = event.target.files[0];
+			if (file.type.match(/image.*/)) {
+				var reader = new FileReader();
+				reader.onload = function() {
+					var image = new Image();
+					image.src = reader.result;
+					imageContainer.innerHTML = "";
+					imageContainer.appendChild(image);
+				}
+				reader.readAsDataURL(file);
+			}
+		});
 	</script>
 </body>
 </html>
