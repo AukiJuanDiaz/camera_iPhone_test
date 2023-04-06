@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Camera Test</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+		}
+		video {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			background-color: black;
+		}
+	</style>
+</head>
+<body>
+	<video id="videoElement"></video>
+
+	<script>
+		var video = document.getElementById("videoElement");
+
+		navigator.mediaDevices.getUserMedia({ video: true })
+			.then(function(stream) {
+				video.srcObject = stream;
+				video.play();
+			})
+			.catch(function(error) {
+				console.error("Error accessing camera.", error);
+			});
+	</script>
+</body>
+</html>
