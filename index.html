@@ -37,6 +37,13 @@
 		// get video element
 		var video = document.getElementById("videoElement");
 
+		// add event listener to video element to ensure it is properly initialized
+		video.addEventListener("loadedmetadata", function() {
+			// set video width and height to prevent distortion
+			video.width = video.videoWidth;
+			video.height = video.videoHeight;
+		});
+
 		// get start button element
 		var startButton = document.getElementById("startButton");
 
