@@ -128,8 +128,20 @@
         // Hide the video player and show the canvas
         player.style.display = "none";
         canvas.style.display = "block";
-        // Update the size of the grid squares
-        updateGrid();
+
+        // Convert the canvas to a blob and send it to the server
+        canvas.toBlob((blob) => {
+          const formData = new FormData();
+          formData.append('image', blob, 'image.jpg');
+          fetch('/process_image', {
+            method: 'POST',
+            body: formData
+          }).then(response => {
+            window.location.href = '/processed_image'; // Redirect to the processed image page
+          }).catch(error => {
+            console.error(error);
+          });
+        }, 'image/jpeg');
       };
 
       // Capture button event listener
