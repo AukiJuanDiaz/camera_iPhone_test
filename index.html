@@ -3,11 +3,15 @@
   <head>
     <title>Camera App</title>
     <style>
+
       #videoContainer {
-        position: relative;
-        width: 90%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80%;
         height: 0;
-        padding-bottom: 90%;
+        padding-bottom: 80%;
       }
 
       #captureButton {
@@ -45,8 +49,8 @@
         audio: false,
         video: {
           facingMode: "environment",
-          width: 1000,
-          height: 1000,
+          width: 800,
+          height: 800,
         },
       };
 
