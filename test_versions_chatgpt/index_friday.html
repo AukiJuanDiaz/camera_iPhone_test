@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Camera App</title>
+    <style>
+
+#container {
+        width: 90%;
+        margin: auto;
+      }
+
+      #video-container {
+        position: relative;
+        width: 100%;
+        padding-bottom: 100%;
+      }
+
+      #video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      #grid-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80%;
+        height: 0;
+        padding-bottom: 80%;
+      }
+
+      .square {
+        position: absolute;
+        width: 11.1%;
+        height: 11.1%;
+        border: 2px solid black;
+      }
+
+      #captureButton {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        font-size: 18px;
+        color: white;
+        background-color: black;
+        cursor: pointer;
+      }
+
+      #canvas {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <div id="video-container">
+        <video id="video" autoplay></video>
+        <div id="grid-container"></div>
+      </div>
+      <button id="capture-button">Capture</button>
+    </div>
+    <script>
+       const video = document.getElementById('video');
+      const captureButton = document.getElementById('capture-button');
+      const gridContainer = document.getElementById('grid-container');
+
+      const constraints = {
+        video: { facingMode: { exact: 'environment' } },
+      };
+
+      captureButton.addEventListener('click', () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const context = canvas.getContext('2d');
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        // Stop all video streams.
+        video.srcObject.getVideoTracks().forEach(track => track.stop());
+
+        // Display the captured image on the page.
+        const capturedImage = new Image();
+        capturedImage.src = canvas.toDataURL();
+        document.body.appendChild(capturedImage);
+      });
+
+      navigator.mediaDevices.getUserMedia(constraints)
+        .then((stream) => {
+          // Attach the video stream to the video element and autoplay.
+          video.srcObject = stream;
+
+          // Create the Sudoku grid.
+          for (let i = 0; i < 81; i++) {
+            const square = document.createElement('div');
+            square.classList.add('square');
+            gridContainer.appendChild(square);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    </script>
+  </body>
+</html>
