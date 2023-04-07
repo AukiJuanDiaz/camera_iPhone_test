@@ -85,9 +85,14 @@
       #canvas {
         display: none;
       }
+
+      h1 {
+            text-align:center;
+      }
     </style>
   </head>
   <body>
+    <h1>Capture Image</h1>
     <div id="videoContainer">
       <video id="player" autoplay playsinline></video>
       <div id="overlaySquare">
@@ -127,7 +132,8 @@
         player.srcObject.getVideoTracks().forEach((track) => track.stop());
         // Hide the video player and show the canvas
         player.style.display = "none";
-        canvas.style.display = "block";
+        captureButton.style.display = "none";
+        canvas.style.display = "none";
 
         // Convert the canvas to a blob and send it to the server
         canvas.toBlob((blob) => {

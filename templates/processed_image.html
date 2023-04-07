@@ -2,10 +2,31 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Processed Image</title>
+
+    <style>
+
+    html, body {
+        height: 100%;
+        margin: 0;
+      }
+        #processedImage {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        max-width: 90vw;
+        max-height: 90vh;
+        }
+
+        h1 {
+            text-align:center;
+        }
+    </style>
+
+    <title>Solution</title>
   </head>
   <body>
     <h1>Processed Image</h1>
-    <img src="{{ image_url }}" />
+    <img id="processedImage" src="{{ image_url }}" />
   </body>
 </html>
