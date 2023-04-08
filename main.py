@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, send_file, redirect, url_for
 import numpy as np
 import cv2
+from  sudoku_image_functions import process_image
 
 app = Flask(__name__)
 
@@ -9,14 +10,15 @@ def index():
     return render_template('index.html')
 
 @app.route('/process_image', methods=['POST'])
-def process_image():
+def sudoku_image_functions():
     # Get the uploaded image from the request
     file = request.files['image']
     img = cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_COLOR)
 
     # Perform your calculations on the image
     # Here's an example that simply inverts the colors
-    img = cv2.bitwise_not(img)
+    # img = cv2.bitwise_not(img)
+    img = process_image(img)
 
     # Save the processed image to a temporary file
     temp_file = 'static/temp.jpg'
